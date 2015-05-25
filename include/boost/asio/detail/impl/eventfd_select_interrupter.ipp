@@ -47,11 +47,10 @@ eventfd_select_interrupter::eventfd_select_interrupter()
 void eventfd_select_interrupter::open_descriptors()
 {
 #if __GLIBC__ == 2 && __GLIBC_MINOR__ < 8
-  int status;
   write_descriptor_ = read_descriptor_ = syscall(__NR_eventfd, 0);
   if (read_descriptor_ != -1)
   {
-    status = ::fcntl(read_descriptor_, F_SETFL, O_NONBLOCK);
+    int status = ::fcntl(read_descriptor_, F_SETFL, O_NONBLOCK);
     if (status == -1)
     {
       boost::system::error_code ec(errno,
@@ -79,7 +78,7 @@ void eventfd_select_interrupter::open_descriptors()
     write_descriptor_ = read_descriptor_ = ::eventfd(0, 0);
     if (read_descriptor_ != -1)
     {
-      status = ::fcntl(read_descriptor_, F_SETFL, O_NONBLOCK);
+      int status = ::fcntl(read_descriptor_, F_SETFL, O_NONBLOCK);
       if (status == -1)
       {
         boost::system::error_code ec(errno,
@@ -103,7 +102,7 @@ void eventfd_select_interrupter::open_descriptors()
     if (pipe(pipe_fds) == 0)
     {
       read_descriptor_ = pipe_fds[0];
-      status = ::fcntl(read_descriptor_, F_SETFL, O_NONBLOCK);
+      int status = ::fcntl(read_descriptor_, F_SETFL, O_NONBLOCK);
       if (status == -1)
       {
         boost::system::error_code ec(errno,
